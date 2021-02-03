@@ -1,65 +1,116 @@
-﻿using System;
+﻿
+using System;
 
 namespace SnakeAndLadderProblem
 {
+    class Player {
+        private int PlayerPosition;
+        private int DiceRollCount = 0;
+
+        public void SetPlayerPosition(int NextPosition)
+        {
+            PlayerPosition += NextPosition;
+            if (PlayerPosition < 0)
+                PlayerPosition = 0;
+        }
+
+        public Player(int StartPosition)
+        {
+            this.PlayerPosition = StartPosition;
+        }
+
+        public int GetDiceRollCount() {
+            return DiceRollCount;
+        }
+
+        public void IncrementDiceRollCount() {
+            DiceRollCount++;
+        }
+
+        public int GetPlayerPosition()
+        {
+            return PlayerPosition;
+        }
+    }
     class SnakeAndLadder
     {
         private const int StartPosition = 0;
-        private int PlayerPosition;
+        private int CurrentPlayer = 0;
         private const int WinningPosition = 100;
-        private int NoOfDiceRoll = 0;
+        private int IdlePlayer = 0;
+        private Player[] player = new Player[2];       
 
         public enum PlayOption {
-            No_Play, Ladder, Snake
+            NoPlay, Ladder, Snake
         }
         public SnakeAndLadder()
         {
-            PlayerPosition = StartPosition;
+            player[0] = new Player(StartPosition);
+            player[1] = new Player(StartPosition);
         }
-
+        
         public void ShowPosition()
         {
-            Console.WriteLine("Player position: "+PlayerPosition);
+            for (int i = 0; i < player.Length; i++)
+            {
+                Console.WriteLine("Player "+ (i+1) +" position: " + player[i].GetPlayerPosition());
+            }
         }
-        private int GetDiceNumber() {
-            NoOfDiceRoll++;
+        private int GetDiceOutcome() {
+            player[CurrentPlayer].IncrementDiceRollCount();
             return new Random().Next(1, 7);
         }
 
-        public PlayOption GetPlayOption() {
-           
+        public PlayOption GetPlayOption() {          
             return (PlayOption)new Random().Next(0, 3);            
         }
 
         public void MakeMove() {
-            int NextPosition = GetDiceNumber();
-            Console.WriteLine("Dice rolled no.: "+ NoOfDiceRoll +" outcome: "+ NextPosition);
+            int NextPosition = GetDiceOutcome();
+            Console.WriteLine("Dice rolled no.: "+ player[CurrentPlayer].GetDiceRollCount() +" outcome: "+ NextPosition);
             switch (GetPlayOption()) {
                 case PlayOption.Ladder:
-                    Console.WriteLine("Play option: Ladder");
-                    PlayerPosition = PlayerPosition + NextPosition > WinningPosition ? PlayerPosition : PlayerPosition + NextPosition;
+                    Console.WriteLine("Play option: Ladder");                     
+                    NextPosition = player[CurrentPlayer].GetPlayerPosition() + NextPosition > WinningPosition ? 0 : NextPosition;
+                    player[CurrentPlayer].SetPlayerPosition(NextPosition);
                     break;
                 case PlayOption.Snake:
+                    ChangePlayer();
                     Console.WriteLine("Play option: Snake");
-                    PlayerPosition -= NextPosition;
-                    if (PlayerPosition < 0)
-                        PlayerPosition = 0;
+                    player[CurrentPlayer].SetPlayerPosition(~NextPosition);
                     break;
                 default:
+                    ChangePlayer();
                     Console.WriteLine("Play option: NO PLAY");
                     break;
-            }
+            }     
+        }
+
+        public void ChangePlayer() {
+            int Temp = CurrentPlayer;
+            CurrentPlayer = IdlePlayer;
+            IdlePlayer = Temp;
+        }
+        public void Toss() {
+            CurrentPlayer = new Random().Next(0, 2);
+            if (CurrentPlayer == 0)
+                IdlePlayer = 1;
         }
 
         public void PlayUntilWin()
         {
+            Toss();
+
             ShowPosition();
-            while (PlayerPosition != WinningPosition)
+            while (player[0].GetPlayerPosition() != WinningPosition && player[1].GetPlayerPosition() != WinningPosition)
             {
+                Console.WriteLine("Player " + (CurrentPlayer + 1) + " is playing");
                 MakeMove();
                 ShowPosition();
                 Console.WriteLine();
             }
+
+            Console.WriteLine("Player "+ (CurrentPlayer + 1) +" won");
         }
         static void Main(string[] args)
         {
