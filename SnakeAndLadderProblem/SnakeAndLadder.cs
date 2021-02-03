@@ -16,12 +16,22 @@ namespace SnakeAndLadderProblem
         {
             Console.WriteLine("Player position: "+PlayerPostion);
         }
+
+        private int GetDiceNumber() {
+            return new Random().Next(1, 7);
+        }
+
+        public void RollTheDice()
+        {
+            Console.WriteLine("Dice rolled: " +GetDiceNumber());
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Snake And Ladder Game");
             SnakeAndLadder snakeAndLadder = new SnakeAndLadder();
             snakeAndLadder.ShowPosition();
-
+            snakeAndLadder.RollTheDice();
         }
     }
 }
