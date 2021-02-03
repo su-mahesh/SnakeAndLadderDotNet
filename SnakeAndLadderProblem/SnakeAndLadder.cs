@@ -5,7 +5,7 @@ namespace SnakeAndLadderProblem
     class SnakeAndLadder
     {
         private const int StartPosition = 0;
-        private int PlayerPostion;
+        private int PlayerPosition;
         private const int WinningPosition = 100;
 
         public enum PlayOption {
@@ -13,12 +13,12 @@ namespace SnakeAndLadderProblem
         }
         public SnakeAndLadder()
         {
-            PlayerPostion = StartPosition;
+            PlayerPosition = StartPosition;
         }
 
         public void ShowPosition()
         {
-            Console.WriteLine("Player position: "+PlayerPostion);
+            Console.WriteLine("Player position: "+PlayerPosition);
         }
         private int GetDiceNumber() {
             return new Random().Next(1, 7);
@@ -35,13 +35,13 @@ namespace SnakeAndLadderProblem
             switch (GetPlayOption()) {
                 case PlayOption.Ladder:
                     Console.WriteLine("Play option: Ladder");
-                    PlayerPostion += NextPosition;
+                    PlayerPosition = PlayerPosition + NextPosition > WinningPosition ? PlayerPosition : PlayerPosition + NextPosition;
                     break;
                 case PlayOption.Snake:
                     Console.WriteLine("Play option: Snake");
-                    PlayerPostion -= NextPosition;
-                    if (PlayerPostion < 0)
-                        PlayerPostion = 0;
+                    PlayerPosition -= NextPosition;
+                    if (PlayerPosition < 0)
+                        PlayerPosition = 0;
                     break;
                 default:
                     Console.WriteLine("Play option: NO PLAY");
@@ -52,7 +52,7 @@ namespace SnakeAndLadderProblem
         public void PlayUntilWin()
         {
             ShowPosition();
-            while (PlayerPostion != WinningPosition)
+            while (PlayerPosition != WinningPosition)
             {
                 MakeMove();
                 ShowPosition();
