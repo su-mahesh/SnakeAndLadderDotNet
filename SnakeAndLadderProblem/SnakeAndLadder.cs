@@ -7,6 +7,7 @@ namespace SnakeAndLadderProblem
         private const int StartPosition = 0;
         private int PlayerPosition;
         private const int WinningPosition = 100;
+        private int NoOfDiceRoll = 0;
 
         public enum PlayOption {
             No_Play, Ladder, Snake
@@ -21,6 +22,7 @@ namespace SnakeAndLadderProblem
             Console.WriteLine("Player position: "+PlayerPosition);
         }
         private int GetDiceNumber() {
+            NoOfDiceRoll++;
             return new Random().Next(1, 7);
         }
 
@@ -31,7 +33,7 @@ namespace SnakeAndLadderProblem
 
         public void MakeMove() {
             int NextPosition = GetDiceNumber();
-            Console.WriteLine("Dice rolled: "+ NextPosition);
+            Console.WriteLine("Dice rolled no.: "+ NoOfDiceRoll +" outcome: "+ NextPosition);
             switch (GetPlayOption()) {
                 case PlayOption.Ladder:
                     Console.WriteLine("Play option: Ladder");
