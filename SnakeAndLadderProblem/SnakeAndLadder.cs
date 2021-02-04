@@ -3,6 +3,7 @@ using System;
 
 namespace SnakeAndLadderProblem
 {
+
     class Player {
         private int PlayerPosition;
         private int DiceRollCount = 0;
@@ -74,14 +75,14 @@ namespace SnakeAndLadderProblem
                     NextPosition = player[CurrentPlayer].GetPlayerPosition() + NextPosition > WinningPosition ? 0 : NextPosition;
                     player[CurrentPlayer].SetPlayerPosition(NextPosition);
                     break;
-                case PlayOption.Snake:
-                    ChangePlayer();
+                case PlayOption.Snake:                   
                     Console.WriteLine("Play option: Snake");
                     player[CurrentPlayer].SetPlayerPosition(~NextPosition);
-                    break;
-                default:
                     ChangePlayer();
+                    break;
+                default:                    
                     Console.WriteLine("Play option: NO PLAY");
+                    ChangePlayer();
                     break;
             }     
         }
@@ -100,7 +101,6 @@ namespace SnakeAndLadderProblem
         public void PlayUntilWin()
         {
             Toss();
-
             ShowPosition();
             while (player[0].GetPlayerPosition() != WinningPosition && player[1].GetPlayerPosition() != WinningPosition)
             {
